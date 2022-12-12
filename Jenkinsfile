@@ -16,7 +16,11 @@ pipeline{
             steps{
                 script{
                     echo "building image"
-                    //gv.buildImage()
+                    withCredentials([usernamePassword(credentialsId: 'docker-cred', passwordVariable: 'PASS', usernameVariable: 'USER')]){
+                        sh 'docker build -t 150419/demo-app:jma-2.0.1 .'
+                        sh "echo $PASS | docker login -u $USER --password=stdin"
+                        sh 'docker push 150419/demo-app:jma-2.0.1'
+                    }
                 }
             }
         }
